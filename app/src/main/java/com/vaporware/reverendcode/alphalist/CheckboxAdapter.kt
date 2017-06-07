@@ -6,9 +6,6 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.view.LayoutInflater
 import android.widget.CheckBox
-import android.widget.TextView
-import android.text.Editable
-import android.text.TextWatcher
 
 
 class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<CheckItem>) : BaseAdapter() {
@@ -42,4 +39,8 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<CheckItem>) 
 
 
 
-data class CheckItem(var checked: Boolean = false, var text: String? = null)
+data class CheckItem(var id: Int? = null,
+                     var timestamp: Int? = null,
+                     var text: String? = null,
+                     var checked: Boolean = false,
+                     var list: String? = null)

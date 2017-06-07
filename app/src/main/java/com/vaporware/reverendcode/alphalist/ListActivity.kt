@@ -1,9 +1,7 @@
 package com.vaporware.reverendcode.alphalist
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -17,6 +15,7 @@ class ListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val db = DbHelper(this)
         setContentView(R.layout.activity_list)
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         val myList = findViewById<ListView>(R.id.mainList)
@@ -49,6 +48,7 @@ class ListActivity : AppCompatActivity() {
         }
 
     }
+
 
     fun newItem(items: MutableList<CheckItem>) {
 //        if the last item has text, create a new last item
