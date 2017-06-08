@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.widget.CheckBox
 
 
-class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<CheckItem>) : BaseAdapter() {
+class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>) : BaseAdapter() {
        var mInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
 
@@ -28,7 +28,7 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<CheckItem>) 
     override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
         val rowView = mInflater.inflate(R.layout.list_item, parent, false)
         val checkBox: CheckBox = rowView.findViewById(R.id.check)
-        val item = getItem(position) as CheckItem
+        val item = getItem(position) as ItemModel
 
 
         checkBox.text = item.text ?: ""
@@ -36,11 +36,9 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<CheckItem>) 
         return rowView
     }
 }
-
-
-
-data class CheckItem(var id: Int? = null,
-                     var timestamp: Int? = null,
-                     var text: String? = null,
-                     var checked: Boolean = false,
-                     var list: String? = null)
+//
+//data class CheckItem(var id: Int? = null,
+//                     var timestamp: Long? = null,
+//                     var text: String? = null,
+//                     var checked: Boolean = false,
+//                     var list: String? = null)

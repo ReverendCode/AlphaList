@@ -12,30 +12,28 @@ import android.widget.*
 import com.vaporware.reverendcode.alphalist.R.id.aButton
 
 class ListActivity : AppCompatActivity() {
-
+    var db: DbHelper? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val db = DbHelper(this)
+        db = DbHelper(applicationContext.filesDir.absolutePath)
         setContentView(R.layout.activity_list)
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         val myList = findViewById<ListView>(R.id.mainList)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val alphaButton = findViewById<Button>(aButton)
         var ascending = true
-        var items = mutableListOf<CheckItem>()
-        val arrayAdapter = CheckboxAdapter(this, items as ArrayList<CheckItem>)
+//        TODO: this needs to be set to the id of the current list to be displayed
+        val items = ArrayList<ItemModel>()
 
-//        items should be filled with any items that exist in the current list
-
-
+        val arrayAdapter = CheckboxAdapter(this, items)
         setSupportActionBar(toolbar)
         myList.adapter = arrayAdapter
         fab.setOnClickListener {
             newItem(items)
             arrayAdapter.notifyDataSetChanged()
-
         }
         alphaButton.setOnClickListener {
+            items.addAll(db!!.retrieveItemList(0))
             if (ascending) {
                 ascending = false
                 items.sortBy { it.text }
@@ -43,21 +41,23 @@ class ListActivity : AppCompatActivity() {
                 ascending = true
                 items.sortByDescending { it.text }
             }
-
             arrayAdapter.notifyDataSetChanged()
         }
-
     }
 
-
-    fun newItem(items: MutableList<CheckItem>) {
-//        if the last item has text, create a new last item
+    fun newItem(items: MutableList<ItemModel>) {
         val alertDialogBuilder = AlertDialog.Builder(this)
         val words = EditText(this)
         alertDialogBuilder.setPositiveButton("Save", { _, _ ->
-//            do saving things here
             if (words.text.isNotBlank()) {
-                items.add(CheckItem(text = words.text.toString()))
+                val item = ItemModel()
+                item.text = words.text.toString()
+                item.listID = 0
+                item.timestamp = System.currentTimeMillis()
+                items.add(item)
+                db!!.saveItem(item)
+
+
             } else Toast.makeText(this,"Not adding empty task",Toast.LENGTH_SHORT).show()
         })
                 .setNegativeButton("Cancel", { _, _ ->
