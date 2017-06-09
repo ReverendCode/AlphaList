@@ -10,9 +10,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import com.vaporware.reverendcode.alphalist.R.id.aButton
+import kotlin.properties.Delegates
 
 class ListActivity : AppCompatActivity() {
-    var db: DbHelper? = null
+    var db: DbHelper by Delegates.notNull<DbHelper>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         db = DbHelper(applicationContext.filesDir.absolutePath)
@@ -33,7 +34,6 @@ class ListActivity : AppCompatActivity() {
             arrayAdapter.notifyDataSetChanged()
         }
         alphaButton.setOnClickListener {
-            items.addAll(db!!.retrieveItemList(0))
             if (ascending) {
                 ascending = false
                 items.sortBy { it.text }
@@ -43,6 +43,7 @@ class ListActivity : AppCompatActivity() {
             }
             arrayAdapter.notifyDataSetChanged()
         }
+        items.addAll(db.retrieveItemList(0))
     }
 
     fun newItem(items: MutableList<ItemModel>) {
@@ -55,9 +56,7 @@ class ListActivity : AppCompatActivity() {
                 item.listID = 0
                 item.timestamp = System.currentTimeMillis()
                 items.add(item)
-                db!!.saveItem(item)
-
-
+                db.saveItem(item)
             } else Toast.makeText(this,"Not adding empty task",Toast.LENGTH_SHORT).show()
         })
                 .setNegativeButton("Cancel", { _, _ ->
@@ -65,7 +64,6 @@ class ListActivity : AppCompatActivity() {
                 })
                 .setTitle("Enter todo item")
                 .setView(words)
-
         val dialog = alertDialogBuilder.create()
         dialog.show()
     }

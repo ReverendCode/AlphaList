@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.CheckBox
+import android.widget.Toast
 
 
 class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>) : BaseAdapter() {
@@ -29,16 +31,17 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>) 
         val rowView = mInflater.inflate(R.layout.list_item, parent, false)
         val checkBox: CheckBox = rowView.findViewById(R.id.check)
         val item = getItem(position) as ItemModel
+        val button = rowView.findViewById<Button>(R.id.cancel)
+        button.setOnClickListener {
 
+        }
+        checkBox.setOnClickListener {
+            item.checked = checkBox.isChecked
 
+            Toast.makeText(view!!.context,"Checkbox: ${checkBox.isChecked}",Toast.LENGTH_SHORT).show()
+        }
         checkBox.text = item.text ?: ""
         checkBox.isChecked = item.checked
         return rowView
     }
 }
-//
-//data class CheckItem(var id: Int? = null,
-//                     var timestamp: Long? = null,
-//                     var text: String? = null,
-//                     var checked: Boolean = false,
-//                     var list: String? = null)
