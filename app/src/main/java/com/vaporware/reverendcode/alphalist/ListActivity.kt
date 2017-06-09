@@ -11,9 +11,15 @@ import android.view.MenuItem
 import android.widget.*
 import com.vaporware.reverendcode.alphalist.R.id.aButton
 import kotlin.properties.Delegates
+import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.Context
+
 
 class ListActivity : AppCompatActivity() {
     var db: DbHelper by Delegates.notNull<DbHelper>()
+    var arrayAdapter: CheckboxAdapter by Delegates.notNull<CheckboxAdapter>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         db = DbHelper(applicationContext.filesDir.absolutePath)
@@ -26,12 +32,11 @@ class ListActivity : AppCompatActivity() {
 //        TODO: this needs to be set to the id of the current list to be displayed
         val items = ArrayList<ItemModel>()
 
-        val arrayAdapter = CheckboxAdapter(this, items)
+        arrayAdapter = CheckboxAdapter(this, items, db)
         setSupportActionBar(toolbar)
         myList.adapter = arrayAdapter
         fab.setOnClickListener {
             newItem(items)
-            arrayAdapter.notifyDataSetChanged()
         }
         alphaButton.setOnClickListener {
             if (ascending) {
@@ -57,6 +62,8 @@ class ListActivity : AppCompatActivity() {
                 item.timestamp = System.currentTimeMillis()
                 items.add(item)
                 db.saveItem(item)
+                arrayAdapter.notifyDataSetChanged()
+
             } else Toast.makeText(this,"Not adding empty task",Toast.LENGTH_SHORT).show()
         })
                 .setNegativeButton("Cancel", { _, _ ->
@@ -92,4 +99,11 @@ class ListActivity : AppCompatActivity() {
         Toast.makeText(this,"remove: ", Toast.LENGTH_SHORT).show()
     }
 
+}
+
+class dbUpdateReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        Toast.makeText(context,"words",Toast.LENGTH_SHORT).show()
+
+    }
 }

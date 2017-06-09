@@ -10,7 +10,7 @@ import android.widget.CheckBox
 import android.widget.Toast
 
 
-class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>) : BaseAdapter() {
+class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>, val db: DbHelper) : BaseAdapter() {
        var mInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
 
@@ -33,11 +33,13 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>) 
         val item = getItem(position) as ItemModel
         val button = rowView.findViewById<Button>(R.id.cancel)
         button.setOnClickListener {
-
+            db.deleteItem(item)
+            mDataSource.remove(item)
+            this.notifyDataSetChanged()
         }
         checkBox.setOnClickListener {
             item.checked = checkBox.isChecked
-
+            db.updateItem(item)
             Toast.makeText(view!!.context,"Checkbox: ${checkBox.isChecked}",Toast.LENGTH_SHORT).show()
         }
         checkBox.text = item.text ?: ""

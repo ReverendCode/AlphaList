@@ -7,12 +7,10 @@ import ninja.sakib.pultusorm.core.PultusORMUpdater
 
 
 class DbHelper(path: String) {
-    val dbPath = path
     val pultus = PultusORM("test.db", path)
 
 
     fun saveItem(item: ItemModel) {
-//        val pultus: PultusORM = PultusORM("test.db",dbPath)
         pultus.save(item)
     }
 
@@ -20,32 +18,35 @@ class DbHelper(path: String) {
         val condition = PultusORMCondition.Builder()
                 .eq("id",item.id)
                 .build()
+
         val updater = PultusORMUpdater.Builder()
                 .set("checked",item.checked)
                 .condition(condition)
                 .build()
-
-        pultus.update(ItemModel(), updater)
+        pultus.delete(ItemModel(),condition)
+        pultus.save(item)
     }
 
     fun retrieveItemList(listID: Int): List<ItemModel> {
-//        val pultus: PultusORM = PultusORM("test.db",dbPath)
 
-        val results = pultus.find(ItemModel())
-        for (item in results) {
-            val foo = item as ItemModel
-            println(foo.text)
-        }
+        val condition = PultusORMCondition.Builder()
+                .eq("listID", listID)
+                .build()
+
+        val results = pultus.find(ItemModel(), condition)
 
         return results as List<ItemModel>
     }
 
     fun deleteItem(item: ItemModel) {
-//        val pultus: PultusORM = PultusORM("test.db",dbPath)
-        pultus.delete(item)
+        val condition = PultusORMCondition.Builder()
+                .eq("id",item.id)
+                .build()
+
+        pultus.delete(ItemModel(), condition)
+
     }
     fun deleteTable() {
-//        val pultus: PultusORM = PultusORM("test.db",dbPath)
         pultus.drop(ItemModel())
     }
 
