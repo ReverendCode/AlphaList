@@ -7,7 +7,6 @@ import android.widget.BaseAdapter
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.Toast
 
 
 class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>, val db: DbHelper) : BaseAdapter() {
@@ -15,7 +14,7 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>, 
 
 
     override fun getItem(p0: Int): Any {
-        return mDataSource.get(p0)
+        return mDataSource[p0]
     }
 
     override fun getItemId(p0: Int): Long {
@@ -40,9 +39,8 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>, 
         checkBox.setOnClickListener {
             item.checked = checkBox.isChecked
             db.updateItem(item)
-            Toast.makeText(view!!.context,"Checkbox: ${checkBox.isChecked}",Toast.LENGTH_SHORT).show()
         }
-        checkBox.text = item.text ?: ""
+        checkBox.text = item.itemName ?: ""
         checkBox.isChecked = item.checked
         return rowView
     }

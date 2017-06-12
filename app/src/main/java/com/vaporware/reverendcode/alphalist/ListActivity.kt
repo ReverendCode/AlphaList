@@ -23,13 +23,14 @@ class ListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         db = DbHelper(applicationContext.filesDir.absolutePath)
+        db.deleteTable()
         setContentView(R.layout.activity_list)
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         val myList = findViewById<ListView>(R.id.mainList)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val alphaButton = findViewById<Button>(aButton)
         var ascending = true
-//        TODO: this needs to be set to the id of the current list to be displayed
+//        TODO: this needs to be set to the itemId of the current list to be displayed
         val items = ArrayList<ItemModel>()
 
         arrayAdapter = CheckboxAdapter(this, items, db)
@@ -41,14 +42,14 @@ class ListActivity : AppCompatActivity() {
         alphaButton.setOnClickListener {
             if (ascending) {
                 ascending = false
-                items.sortBy { it.text }
+                items.sortBy { it.itemName }
             } else {
                 ascending = true
-                items.sortByDescending { it.text }
+                items.sortByDescending { it.itemName }
             }
             arrayAdapter.notifyDataSetChanged()
         }
-        items.addAll(db.retrieveItemList(0))
+        items.addAll(db.getAllItems())
     }
 
     fun newItem(items: MutableList<ItemModel>) {
@@ -57,9 +58,7 @@ class ListActivity : AppCompatActivity() {
         alertDialogBuilder.setPositiveButton("Save", { _, _ ->
             if (words.text.isNotBlank()) {
                 val item = ItemModel()
-                item.text = words.text.toString()
-                item.listID = 0
-                item.timestamp = System.currentTimeMillis()
+                item.itemName = words.text.toString()
                 items.add(item)
                 db.saveItem(item)
                 arrayAdapter.notifyDataSetChanged()
@@ -71,8 +70,7 @@ class ListActivity : AppCompatActivity() {
                 })
                 .setTitle("Enter todo item")
                 .setView(words)
-        val dialog = alertDialogBuilder.create()
-        dialog.show()
+        alertDialogBuilder.create().show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -95,8 +93,9 @@ class ListActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun removeItem(view: View) {
-        Toast.makeText(this,"remove: ", Toast.LENGTH_SHORT).show()
+    fun itemClicked(view: View?): Unit {
+//        if this gives me the behavior I want, this is the launch point for the item detail intent
+        Toast.makeText(applicationContext,"woopdadoop", Toast.LENGTH_SHORT).show()
     }
 
 }
