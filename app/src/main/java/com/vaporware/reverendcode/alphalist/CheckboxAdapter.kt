@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.CheckBox
 
 
-class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>, val db: DbHelper) : BaseAdapter() {
+class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<Equipment>, val db: DbHelper) : BaseAdapter() {
        var mInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
 
@@ -29,7 +29,7 @@ class CheckboxAdapter(mContext: Context, var mDataSource: ArrayList<ItemModel>, 
     override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
         val rowView = mInflater.inflate(R.layout.list_item, parent, false)
         val checkBox: CheckBox = rowView.findViewById(R.id.check)
-        val item = getItem(position) as ItemModel
+        val item = getItem(position) as Equipment
         val button = rowView.findViewById<Button>(R.id.cancel)
         button.setOnClickListener {
             db.deleteItem(item)

@@ -31,7 +31,7 @@ class ListActivity : AppCompatActivity() {
         val alphaButton = findViewById<Button>(aButton)
         var ascending = true
 //        TODO: this needs to be set to the itemId of the current list to be displayed
-        val items = ArrayList<ItemModel>()
+        val items = ArrayList<Equipment>()
 
         arrayAdapter = CheckboxAdapter(this, items, db)
         setSupportActionBar(toolbar)
@@ -42,22 +42,24 @@ class ListActivity : AppCompatActivity() {
         alphaButton.setOnClickListener {
             if (ascending) {
                 ascending = false
+                alphaButton.text = getString(R.string.ascendingText)
                 items.sortBy { it.itemName }
             } else {
                 ascending = true
+                alphaButton.text = getString(R.string.descendingText)
                 items.sortByDescending { it.itemName }
             }
             arrayAdapter.notifyDataSetChanged()
         }
-        items.addAll(db.getAllItems())
+        items.addAll(db.getAll())
     }
 
-    fun newItem(items: MutableList<ItemModel>) {
+    fun newItem(items: MutableList<Equipment>) {
         val alertDialogBuilder = AlertDialog.Builder(this)
         val words = EditText(this)
         alertDialogBuilder.setPositiveButton("Save", { _, _ ->
             if (words.text.isNotBlank()) {
-                val item = ItemModel()
+                val item = Equipment()
                 item.itemName = words.text.toString()
                 items.add(item)
                 db.saveItem(item)
@@ -95,14 +97,14 @@ class ListActivity : AppCompatActivity() {
 
     fun itemClicked(view: View?): Unit {
 //        if this gives me the behavior I want, this is the launch point for the item detail intent
-        Toast.makeText(applicationContext,"woopdadoop", Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext,"An item has been touched", Toast.LENGTH_SHORT).show()
     }
 
 }
 
 class dbUpdateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Toast.makeText(context,"words",Toast.LENGTH_SHORT).show()
+        Toast.makeText(context,"Caught a DB broadcast!",Toast.LENGTH_SHORT).show()
 
     }
 }
