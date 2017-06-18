@@ -1,78 +1,33 @@
 package com.vaporware.reverendcode.alphalist
 
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
-import com.vaporware.reverendcode.alphalist.R.id.aButton
 import kotlin.properties.Delegates
 import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 
 
 class ListActivity : AppCompatActivity() {
-    var db: DbHelper by Delegates.notNull<DbHelper>()
-    var arrayAdapter: CheckboxAdapter by Delegates.notNull<CheckboxAdapter>()
+
+    var recyclerView: RecyclerView by Delegates.notNull<RecyclerView>()
+    var equipmentList: MutableList<Equipment> = mutableListOf()
+    var equipmentAdapter: EquipmentAdapter by Delegates.notNull<EquipmentAdapter>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db = DbHelper(applicationContext.filesDir.absolutePath)
-        db.deleteTable()
-        setContentView(R.layout.activity_list)
-        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        val myList = findViewById<ListView>(R.id.mainList)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        val alphaButton = findViewById<Button>(aButton)
-        var ascending = true
-//        TODO: this needs to be set to the itemId of the current list to be displayed
-        val items = ArrayList<Equipment>()
+        recyclerView = findViewById(R.id.mainList)
+        equipmentAdapter = EquipmentAdapter(equipmentList)
 
-        arrayAdapter = CheckboxAdapter(this, items, db)
-        setSupportActionBar(toolbar)
-        myList.adapter = arrayAdapter
-        fab.setOnClickListener {
-            newItem(items)
-        }
-        alphaButton.setOnClickListener {
-            if (ascending) {
-                ascending = false
-                alphaButton.text = getString(R.string.ascendingText)
-                items.sortBy { it.itemName }
-            } else {
-                ascending = true
-                alphaButton.text = getString(R.string.descendingText)
-                items.sortByDescending { it.itemName }
-            }
-            arrayAdapter.notifyDataSetChanged()
-        }
-        items.addAll(db.getAll())
     }
 
-    fun newItem(items: MutableList<Equipment>) {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        val words = EditText(this)
-        alertDialogBuilder.setPositiveButton("Save", { _, _ ->
-            if (words.text.isNotBlank()) {
-                val item = Equipment()
-                item.itemName = words.text.toString()
-                items.add(item)
-                db.saveItem(item)
-                arrayAdapter.notifyDataSetChanged()
-
-            } else Toast.makeText(this,"Not adding empty task",Toast.LENGTH_SHORT).show()
-        })
-                .setNegativeButton("Cancel", { _, _ ->
-                    words.text.clear()
-                })
-                .setTitle("Enter todo item")
-                .setView(words)
-        alertDialogBuilder.create().show()
+    fun addItems(): List<Equipment> {
+        val tent = Equipment()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
