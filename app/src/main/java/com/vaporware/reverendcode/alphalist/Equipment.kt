@@ -9,13 +9,14 @@ import kotlin.properties.Delegates
 
 class Equipment {
 
-    var itemId: Int = -1 //is this a solid default??
+    var itemId: Int by Delegates.notNull<Int>()
     var itemName: String? = null
     var myMass: Float = 0F
     var description: String by Delegates.notNull<String>()
     var checked: Boolean = false
     var userAttribs: Map<String, String>? = null
     var contains: List<String> by Delegates.notNull<List<String>>()
+    var tags: List<String> by Delegates.notNull<List<String>>()
 
     fun getMass(): Float {
         TODO("get the sum of all contained masses, add your mass")

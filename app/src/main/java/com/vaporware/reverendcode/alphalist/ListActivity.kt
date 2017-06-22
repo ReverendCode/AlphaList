@@ -10,24 +10,32 @@ import kotlin.properties.Delegates
 import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
 
 class ListActivity : AppCompatActivity() {
 
-    var recyclerView: RecyclerView by Delegates.notNull<RecyclerView>()
-    var equipmentList: MutableList<Equipment> = mutableListOf()
-    var equipmentAdapter: EquipmentAdapter by Delegates.notNull<EquipmentAdapter>()
+    var mRecyclerView: RecyclerView by Delegates.notNull<RecyclerView>()
+    var mTripList: MutableList<Trip> = mutableListOf()
+    var mAdapter: TripAdapter by Delegates.notNull<TripAdapter>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        recyclerView = findViewById(R.id.mainList)
-        equipmentAdapter = EquipmentAdapter(equipmentList)
-
+        setContentView(R.layout.activity_list)
+        mRecyclerView = findViewById(R.id.tripList)
+        mAdapter = TripAdapter(mTripList)
+        mRecyclerView.layoutManager = LinearLayoutManager(this)
+        mRecyclerView.adapter = mAdapter
+        mTripList.addAll(addTrip())
     }
 
-    fun addItems(): List<Equipment> {
-        val tent = Equipment()
+
+    fun addTrip(): List<Trip> {
+        val retVal = mutableListOf<Trip>()
+        retVal.add(Trip("Bryce Canyon Car Camping",R.drawable.bryce))
+        retVal.add(Trip("Default trip image test"))
+        return retVal
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
