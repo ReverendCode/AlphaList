@@ -63,11 +63,8 @@ class ListActivity : AppCompatActivity() {
         Toast.makeText(applicationContext,"An item has been touched", Toast.LENGTH_SHORT).show()
     }
 
-}
-
-class dbUpdateReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        Toast.makeText(context,"Caught a DB broadcast!",Toast.LENGTH_SHORT).show()
-
+    fun tripAdd(view: View?): Unit {
+        Toast.makeText(applicationContext,"Add a trip",Toast.LENGTH_SHORT).show()
     }
+
 }
